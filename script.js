@@ -485,6 +485,15 @@ function labana() {
             return [c[effort.ciezar], t[effort.czas], p[effort.prz]].filter(Boolean).join('  ');
         },
 
+        // Returns [ciężar word, czas word, przestrzeń word] for coloured display
+        axisWords(effort) {
+            if (!effort) return ['', '', ''];
+            const c = { S: 'Stanowczy', D: 'Delikatny' };
+            const t = { N: 'Nagły', T: 'Trwały' };
+            const p = { B: 'Bezpośredni', P: 'Pośredni' };
+            return [c[effort.ciezar] || '', t[effort.czas] || '', p[effort.prz] || ''];
+        },
+
         shuffle(arr) {
             const a = [...arr];
             for (let i = a.length - 1; i > 0; i--) {

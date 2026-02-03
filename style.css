@@ -431,6 +431,20 @@ nav {
 	color: var(--color-accent);
 }
 
+/* Ściąga: coloured axis words (no code letters) */
+.sciaga-axis-row {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px 10px;
+	font-size: 0.72rem;
+	font-weight: 600;
+	margin: 2px 0 4px;
+}
+
+.sciaga-axis {
+	white-space: nowrap;
+}
+
 /* ─── QUIZ ─── */
 .quiz-question {
 	background: var(--color-card);
