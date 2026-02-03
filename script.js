@@ -100,6 +100,7 @@ function labana() {
 
         // ── audio state ──
         currentAudio: null,
+        currentAudioEffort: null,  // effort.code of the audio in currentAudio (for pause/resume)
         playingAudio: null,
 
         // ─── INIT ────────────────────────────────────
@@ -338,8 +339,8 @@ function labana() {
 
             // Update label based on quiz type
             switch (this.quizType) {
-                case 'name-to-code': this.quizTypeLabel = 'Wybierz kod tego wysiłku'; break;
-                case 'code-to-name': this.quizTypeLabel = 'Wybierz nazwę tego kodu'; break;
+                case 'name-to-code': this.quizTypeLabel = 'Wybierz kombinację (kod) tego wysiłku'; break;
+                case 'code-to-name': this.quizTypeLabel = 'Wybierz nazwę dla tej kombinacji'; break;
                 case 'name-to-desc': this.quizTypeLabel = 'Wybierz opis tego wysiłku'; break;
                 case 'desc-to-name': this.quizTypeLabel = 'Wybierz nazwę tego opisu'; break;
             }
@@ -476,6 +477,14 @@ function labana() {
         // ═══════════════════════════════════════════════
         // HELPERS
         // ═══════════════════════════════════════════════
+        axisLabel(effort) {
+            if (!effort || !effort.code) return '';
+            const c = { S: 'Stanowczy', D: 'Delikatny' };
+            const t = { N: 'Nagły', T: 'Trwały' };
+            const p = { B: 'Bezpośredni', P: 'Pośredni' };
+            return [c[effort.ciezar], t[effort.czas], p[effort.prz]].filter(Boolean).join('  ');
+        },
+
         shuffle(arr) {
             const a = [...arr];
             for (let i = a.length - 1; i > 0; i--) {
@@ -498,42 +507,49 @@ function labana() {
                 this.currentAudio.currentTime = 0;
                 this.currentAudio = null;
             }
+            this.currentAudioEffort = null;
             this.playingAudio = null;
         },
 
         playAudio(effort) {
-            // Stop current audio if playing
-            this.stopAudio();
-
-            // If clicking the same effort, just stop it
-            if (this.playingAudio === effort.code) {
-                this.stopAudio();
+            // Same effort: toggle pause / resume
+            if (this.currentAudioEffort === effort.code) {
+                if (this.currentAudio.paused) {
+                    this.currentAudio.play().catch(() => { });
+                    this.playingAudio = effort.code;
+                } else {
+                    this.currentAudio.pause();
+                    this.playingAudio = null;
+                }
                 return;
             }
 
-            // Create new audio element
+            // Different effort or none: stop current and start this one
+            this.stopAudio();
+
             const audio = new Audio(effort.audio);
             this.currentAudio = audio;
+            this.currentAudioEffort = effort.code;
             this.playingAudio = effort.code;
 
-            // Handle audio end
             audio.onended = () => {
                 this.playingAudio = null;
                 this.currentAudio = null;
+                this.currentAudioEffort = null;
             };
 
-            // Handle errors
             audio.onerror = () => {
                 console.warn(`Audio file not found: ${effort.audio}`);
                 this.playingAudio = null;
                 this.currentAudio = null;
+                this.currentAudioEffort = null;
             };
 
-            // Play audio
             audio.play().catch(err => {
                 console.warn('Audio playback failed:', err);
                 this.playingAudio = null;
                 this.currentAudio = null;
+                this.currentAudioEffort = null;
             });
         },
 

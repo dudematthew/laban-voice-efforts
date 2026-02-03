@@ -475,6 +475,13 @@ nav {
 	background: rgba(255, 255, 255, 0.05);
 }
 
+.quiz-q-axis-hint {
+	font-size: 0.8rem;
+	color: var(--color-muted);
+	margin-top: 6px;
+	letter-spacing: 0.02em;
+}
+
 .quiz-q-desc {
 	font-size: 0.85rem;
 	color: var(--color-text);
@@ -536,6 +543,19 @@ nav {
 .quiz-option .opt-text {
 	font-size: 0.85rem;
 	line-height: 1.4;
+}
+
+.quiz-option .opt-code-block,
+.quiz-option .opt-name-block {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+}
+
+.quiz-option .opt-axis-hint {
+	font-size: 0.72rem;
+	color: var(--color-muted);
+	font-weight: 400;
 }
 
 .quiz-feedback {

@@ -207,11 +207,11 @@
       <div class="quiz-type-selector">
         <button class="quiz-type-btn" :class="{active: quizType === 'name-to-code'}"
           @click="quizType = 'name-to-code'; nextQuiz();">
-          Nazwa → Kod
+          Nazwa → Kombinacja
         </button>
         <button class="quiz-type-btn" :class="{active: quizType === 'code-to-name'}"
           @click="quizType = 'code-to-name'; nextQuiz();">
-          Kod → Nazwa
+          Kombinacja → Nazwa
         </button>
         <button class="quiz-type-btn" :class="{active: quizType === 'name-to-desc'}"
           @click="quizType = 'name-to-desc'; nextQuiz();">
@@ -250,7 +250,7 @@
           </div>
         </template>
 
-        <!-- Kod → Nazwa: show only code -->
+        <!-- Kombinacja → Nazwa: show code + axis explanation -->
         <template x-if="quizType === 'code-to-name'">
           <div>
             <div class="quiz-q-code">
@@ -258,6 +258,7 @@
               <span :style="`color:var(--ax-czas)`" x-text="quizQ.code[1]"></span>
               <span :style="`color:var(--ax-prz)`" x-text="quizQ.code[2]"></span>
             </div>
+            <div class="quiz-q-axis-hint" x-text="axisLabel(quizQ)"></div>
           </div>
         </template>
 
@@ -286,18 +287,24 @@
              }" @click="answerQuiz(idx)">
             <div class="opt-letter" x-text="['A','B','C','D'][idx]"></div>
             <div class="opt-text">
-              <!-- For name-to-code: show codes -->
+              <!-- For name-to-code: show codes + axis explanation -->
               <template x-if="quizType === 'name-to-code'">
-                <span>
-                  <span :style="`color:var(--ax-ciezar); font-weight:700;`" x-text="opt.code[0]"></span>
-                  <span :style="`color:var(--ax-czas); font-weight:700;`" x-text="opt.code[1]"></span>
-                  <span :style="`color:var(--ax-prz); font-weight:700;`" x-text="opt.code[2]"></span>
-                </span>
+                <div class="opt-code-block">
+                  <span>
+                    <span :style="`color:var(--ax-ciezar); font-weight:700;`" x-text="opt.code[0]"></span>
+                    <span :style="`color:var(--ax-czas); font-weight:700;`" x-text="opt.code[1]"></span>
+                    <span :style="`color:var(--ax-prz); font-weight:700;`" x-text="opt.code[2]"></span>
+                  </span>
+                  <div class="opt-axis-hint" x-text="axisLabel(opt)"></div>
+                </div>
               </template>
 
-              <!-- For code-to-name: show names -->
+              <!-- For code-to-name: show names + code/axis below -->
               <template x-if="quizType === 'code-to-name'">
-                <span x-text="opt.name" style="font-weight: 600;"></span>
+                <div class="opt-name-block">
+                  <span x-text="opt.name" style="font-weight: 600;"></span>
+                  <div class="opt-axis-hint" x-text="opt.code + ' — ' + axisLabel(opt)"></div>
+                </div>
               </template>
 
               <!-- For name-to-desc: show descriptions -->
@@ -326,8 +333,8 @@
                   x-text="quizQ.desc"></span></span>
             </template>
             <template x-if="quizType === 'code-to-name'">
-              <span><strong x-text="quizQ.code"></strong> to <strong x-text="quizQ.name"></strong>: <span
-                  x-text="quizQ.desc"></span></span>
+              <span>Kombinacja <strong x-text="quizQ.code"></strong> (<span x-text="axisLabel(quizQ)"></span>) to
+                <strong x-text="quizQ.name"></strong>: <span x-text="quizQ.desc"></span></span>
             </template>
             <template x-if="quizType === 'name-to-desc'">
               <span><strong x-text="quizQ.name"></strong>: <span x-text="quizQ.desc"></span></span>
