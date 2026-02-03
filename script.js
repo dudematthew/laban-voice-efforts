@@ -17,42 +17,50 @@ function labana() {
             {
                 name: 'Uderzający', code: 'SNB', ciezar: 'S', czas: 'N', prz: 'B',
                 desc: 'Silny, nagły i bezpośredni. Zaangażuj mocny wydech wspierany mięśniami brzucha. Krtań krótkotrwale się zaciska. Dźwięk jest jak precyzyjne uderzenie.',
-                example: 'Stanowczy rozkaz, gniewny okrzyk "Nie!", zdecydowane hasło.'
+                example: 'Stanowczy rozkaz, gniewny okrzyk "Nie!", zdecydowane hasło.',
+                audio: 'audio/uderzajacy.mp3'
             },
             {
                 name: 'Trzepiący', code: 'DNP', ciezar: 'D', czas: 'N', prz: 'P',
                 desc: 'Lekki, nagły i pośredni. Dźwięk jest "rzucany" lub "strzepywany" bez ciężaru. Powietrze ulatnia się swobodnie, prawie bez oporu w krtani.',
-                example: 'Sarkastyczna uwaga rzucona w powietrze, nerwowy śmiech, lekceważący komentarz.'
+                example: 'Sarkastyczna uwaga rzucona w powietrze, nerwowy śmiech, lekceważący komentarz.',
+                audio: 'audio/trzepiacy.mp3'
             },
             {
                 name: 'Naciskający', code: 'STB', ciezar: 'S', czas: 'T', prz: 'B',
                 desc: 'Silny, ciągły i bezpośredni. Utrzymuj stały nacisk na struny głosowe i kontrolowany wydech. Dźwięk jest gęsty, intensywny i uporczywie ukierunkowany.',
-                example: 'Powolna groźba, dobitne czytanie wyroku, mówienie przez zaciśnięte zęby w gniewie.'
+                example: 'Powolna groźba, dobitne czytanie wyroku, mówienie przez zaciśnięte zęby w gniewie.',
+                audio: 'audio/naciskajacy.mp3'
             },
             {
                 name: 'Dotykający', code: 'DNB', ciezar: 'D', czas: 'N', prz: 'B',
                 desc: 'Lekki, nagły i bezpośredni. Krótkie, precyzyjne "pchnięcia" dźwiękiem. Każda sylaba jest oddzielona i wyraźna, jak punktowy dotyk.',
-                example: 'Szeptane wyznanie, dyktowanie numeru telefonu.'
+                example: 'Szeptane wyznanie, dyktowanie numeru telefonu.',
+                audio: 'audio/dotykajacy.mp3'
             },
             {
                 name: 'Sunący', code: 'DTB', ciezar: 'D', czas: 'T', prz: 'B',
                 desc: 'Lekki, ciągły i bezpośredni. Płynny, nieprzerwany strumień dźwięku łagodnie prowadzony do przodu. Oddech spokojny, krtań rozluźniona.',
-                example: 'Spokojny narrator audiobooka, łagodne pocieszanie, melodyjne opowiadanie historii.'
+                example: 'Spokojny narrator audiobooka, łagodne pocieszanie, melodyjne opowiadanie historii.',
+                audio: 'audio/sunacy.mp3'
             },
             {
                 name: 'Unoszący', code: 'DTP', ciezar: 'D', czas: 'T', prz: 'P',
                 desc: 'Lekki, ciągły i pośredni. Dźwięk "unosi się" lub "dryfuje" bez wyraźnego kierunku. Minimalne napięcie strun, barwa eteryczna i rozmyta.',
-                example: 'Marzycielskie mówienie do siebie, głos w transie, delikatne nucenie.'
+                example: 'Marzycielskie mówienie do siebie, głos w transie, delikatne nucenie.',
+                audio: 'audio/unoszacy.mp3'
             },
             {
                 name: 'Wykręcający', code: 'SNP', ciezar: 'S', czas: 'N', prz: 'P',
                 desc: 'Silny, nagły i pośredni. Ostry, szarpiący wysiłek rozlewający się na boki. Intensywny, ale pozbawiony precyzyjnego skupienia.',
-                example: 'Szyderczy śmiech, histeryczny krzyk, nagły wybuch frustracji.'
+                example: 'Szyderczy śmiech, histeryczny krzyk, nagły wybuch frustracji.',
+                audio: 'audio/wykrecajacy.mp3'
             },
             {
                 name: 'Tnący', code: 'STP', ciezar: 'S', czas: 'T', prz: 'P',
                 desc: 'Silny, ciągły i pośredni. Stałe napięcie z wewnętrznym oporem i "skręceniem". Dźwięk jest "wyżymany" z trudem, z poczuciem cierpienia.',
-                example: 'Głos tłumiący płacz, mówienie przez ból, monolog pełen wewnętrznej agonii.'
+                example: 'Głos tłumiący płacz, mówienie przez ból, monolog pełen wewnętrznej agonii.',
+                audio: 'audio/tnacy.mp3'
             },
         ],
 
@@ -73,6 +81,7 @@ function labana() {
         // ── flashcard state ──
         flashQueue: [],
         flashIndex: 0,
+        flashTotal: 8,  // fixed: number of efforts (progress denominator)
         flashFlipped: false,
         flashScore: { know: 0, dontknow: 0, streak: 0, bestStreak: 0 },
 
@@ -88,6 +97,10 @@ function labana() {
         gmCombo: { effort: {}, mods: [] },
         gmRevealed: false,
         gmAnswer: '',
+
+        // ── audio state ──
+        currentAudio: null,
+        playingAudio: null,
 
         // ─── INIT ────────────────────────────────────
         init() {
@@ -271,6 +284,8 @@ function labana() {
         },
 
         switchMode(m) {
+            // Stop any playing audio when switching modes
+            this.stopAudio();
             this.mode = m;
         },
 
@@ -280,6 +295,7 @@ function labana() {
         resetFlash() {
             this.flashQueue = this.shuffle([...this.efforts]);
             this.flashIndex = 0;
+            this.flashTotal = this.efforts.length;
             this.flashFlipped = false;
             this.flashScore = { know: 0, dontknow: 0, streak: 0, bestStreak: 0 };
         },
@@ -306,6 +322,10 @@ function labana() {
             }
             this.flashIndex++;
             this.flashFlipped = false;
+            // End round when we've rated past the last card in the queue
+            if (this.flashIndex >= this.flashQueue.length) {
+                this.flashQueue = [];
+            }
         },
 
         // ═══════════════════════════════════════════════
@@ -467,6 +487,58 @@ function labana() {
 
         pick(arr) {
             return arr[Math.floor(Math.random() * arr.length)];
+        },
+
+        // ═══════════════════════════════════════════════
+        // AUDIO PLAYBACK
+        // ═══════════════════════════════════════════════
+        stopAudio() {
+            if (this.currentAudio) {
+                this.currentAudio.pause();
+                this.currentAudio.currentTime = 0;
+                this.currentAudio = null;
+            }
+            this.playingAudio = null;
+        },
+
+        playAudio(effort) {
+            // Stop current audio if playing
+            this.stopAudio();
+
+            // If clicking the same effort, just stop it
+            if (this.playingAudio === effort.code) {
+                this.stopAudio();
+                return;
+            }
+
+            // Create new audio element
+            const audio = new Audio(effort.audio);
+            this.currentAudio = audio;
+            this.playingAudio = effort.code;
+
+            // Handle audio end
+            audio.onended = () => {
+                this.playingAudio = null;
+                this.currentAudio = null;
+            };
+
+            // Handle errors
+            audio.onerror = () => {
+                console.warn(`Audio file not found: ${effort.audio}`);
+                this.playingAudio = null;
+                this.currentAudio = null;
+            };
+
+            // Play audio
+            audio.play().catch(err => {
+                console.warn('Audio playback failed:', err);
+                this.playingAudio = null;
+                this.currentAudio = null;
+            });
+        },
+
+        isPlaying(effortCode) {
+            return this.playingAudio === effortCode;
         }
     };
 }

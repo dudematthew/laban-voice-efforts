@@ -13,6 +13,39 @@
 
   <title>Wysiłki Labana — Trening Głosu</title>
 
+  <!-- Open Graph -->
+  <meta property="og:title" content="Wysiłki Labana — Trening Głosu">
+  <meta property="og:description"
+    content="Trening głosu postaci. Nauka, quiz i generowanie postaci w oparciu o 8 wysiłków Labana: ciężar, czas, przestrzeń.">
+  <meta property="og:image" content="thumbnail.png">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="pl_PL">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Wysiłki Labana — Trening Głosu">
+  <meta name="twitter:description"
+    content="Trening głosu postaci. Nauka, quiz i generowanie postaci w oparciu o 8 wysiłków Labana.">
+  <meta name="twitter:image" content="thumbnail.png">
+
+  <link rel="apple-touch-icon" sizes="57x57" href="favicon/apple-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="favicon/apple-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="favicon/apple-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="favicon/apple-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="favicon/apple-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="favicon/apple-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="favicon/apple-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-icon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="favicon/android-icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="favicon/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
+  <link rel="manifest" href="favicon/manifest.json">
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="msapplication-TileImage" content="favicon/ms-icon-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
   <link rel="stylesheet" href="style.css">
 </head>
 
@@ -51,11 +84,12 @@
       <div class="progress-wrap">
         <div class="progress-label">
           <span>Postęp</span>
-          <span x-text="flashQueue.length === 0 ? 'Gotowe!' : (flashIndex+1) + ' / ' + flashQueue.length"></span>
+          <span
+            x-text="flashQueue.length === 0 ? 'Gotowe!' : (Math.min(flashIndex+1, flashTotal) + ' / ' + flashTotal)"></span>
         </div>
         <div class="progress-track">
           <div class="progress-fill"
-            :style="`width: ${flashQueue.length ? ((flashIndex)/flashQueue.length*100) : 100}%`"></div>
+            :style="`width: ${flashQueue.length ? (Math.min(flashIndex, flashTotal) / flashTotal * 100) : 100}%`"></div>
         </div>
       </div>
 
@@ -71,7 +105,7 @@
         </div>
         <div class="score-item">
           <div class="score-num gold" x-text="flashScore.streak"></div>
-          <div class="score-lbl">Serię</div>
+          <div class="score-lbl">Seria</div>
         </div>
       </div>
 
@@ -134,6 +168,11 @@
                 </div>
                 <div class="card-description" x-text="currentFlash().desc"></div>
                 <div class="card-example" x-text="'Przykład: ' + currentFlash().example"></div>
+                <button class="audio-play-btn" @click.stop="playAudio(currentFlash())"
+                  :class="{playing: isPlaying(currentFlash().code)}">
+                  <span x-show="!isPlaying(currentFlash().code)">▶ Odsłuchaj</span>
+                  <span x-show="isPlaying(currentFlash().code)">⏸ Odtwarzanie...</span>
+                </button>
                 <div class="card-rating-row">
                   <button class="btn-dontknow" @click.stop="rateFlash(false)">✗ Nie znam</button>
                   <button class="btn-know" @click.stop="rateFlash(true)">✓ Znam</button>
@@ -196,7 +235,7 @@
         </div>
         <div class="score-item">
           <div class="score-num gold" x-text="quizScore.streak"></div>
-          <div class="score-lbl">Serię</div>
+          <div class="score-lbl">Seria</div>
         </div>
       </div>
 
@@ -299,6 +338,12 @@
             </template>
           </span>
         </template>
+        <div style="margin-top: 10px;">
+          <button class="audio-play-btn" @click.stop="playAudio(quizQ)" :class="{playing: isPlaying(quizQ.code)}">
+            <span x-show="!isPlaying(quizQ.code)">▶ Odsłuchaj</span>
+            <span x-show="isPlaying(quizQ.code)">⏸ Odtwarzanie...</span>
+          </button>
+        </div>
       </div>
 
       <!-- next -->
@@ -324,6 +369,11 @@
           --><span :style="`color:var(--ax-czas)`" x-text="gmCombo.effort.code[1]"></span><!--
           --><span :style="`color:var(--ax-prz)`" x-text="gmCombo.effort.code[2]"></span>
           </div>
+          <button class="audio-play-btn" @click.stop="playAudio(gmCombo.effort)"
+            :class="{playing: isPlaying(gmCombo.effort.code)}" style="margin-top: 10px;">
+            <span x-show="!isPlaying(gmCombo.effort.code)">▶ Odsłuchaj</span>
+            <span x-show="isPlaying(gmCombo.effort.code)">⏸ Odtwarzanie...</span>
+          </button>
         </div>
 
         <!-- modifiers -->
@@ -369,17 +419,28 @@
               --><span :style="`color:var(--ax-czas)`" x-text="e.code[1]"></span><!--
               --><span :style="`color:var(--ax-prz)`" x-text="e.code[2]"></span>
               </div>
-              <div style="font-size:.72rem; color:var(--color-muted);" x-text="e.desc"></div>
+              <div style="font-size:.72rem; color:var(--color-muted); margin-bottom:6px;" x-text="e.desc"></div>
+              <button class="audio-play-btn" @click.stop="playAudio(e)" :class="{playing: isPlaying(e.code)}"
+                style="width:100%; font-size:.7rem; padding:4px 8px;">
+                <span x-show="!isPlaying(e.code)">▶</span>
+                <span x-show="isPlaying(e.code)">⏸</span>
+              </button>
             </div>
           </template>
         </div>
       </details>
     </div>
 
-    <!-- CHEAT SHEET BUTTON -->
-    <button class="cheatsheet-btn" @click="modalOpen = true">
-      📋 Ściąga
-    </button>
+    <!-- CHEAT SHEET & TUTORIAL BUTTONS -->
+    <div class="cheatsheet-row">
+      <button class="cheatsheet-btn" @click="modalOpen = true">
+        📋 Ściąga
+      </button>
+      <a class="cheatsheet-btn" href="https://www.youtube.com/watch?v=FVmAEezr6ao" target="_blank"
+        rel="noopener noreferrer">
+        🎬 Tutorial
+      </a>
+    </div>
 
     <!-- MODAL FOR CHEAT SHEET -->
     <div x-show="modalOpen" class="modal-overlay" @click.self="modalOpen = false">
