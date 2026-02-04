@@ -1,12 +1,14 @@
 # Wysiłki Labana — Trening Głosu (Laban Voice Efforts)
 
-A single-page web app for **voice and character training** based on **Laban’s Eight Efforts** (wysiłki Labana). Learn the efforts, quiz yourself, and generate random character voice descriptions for acting or tabletop RPGs.
+**🎭 [Try it live →](https://dudematthew.smallhost.pl/laban/)**
+
+A single-page web app for **voice and character training** based on **Laban's Eight Efforts** (wysiłki Labana). Learn the efforts, quiz yourself, and generate random character voice descriptions for acting or tabletop RPGs.
 
 The UI is in **Polish**; the app runs entirely in the browser (no backend).
 
 ---
 
-## What Are Laban’s Efforts?
+## What Are Laban's Efforts?
 
 In Laban Movement Analysis, **effort** describes *how* we move (or speak). Each effort is a combination of three binary axes:
 
@@ -37,9 +39,9 @@ Each effort has a short description, an example use, and an **audio demo** so yo
 
 ### 1. **Nauka (Learn)** — Flashcards
 
-- Front: effort name, 3-letter code (colour-coded by axis), and a small “cube” showing which pole of each axis is active.
-- Back: axis labels (Stanowczy/Delikatny, Nagły/Trwały, Bezpośredni/Pośredni), description, example, **play audio**, and **Znam** / **Nie znam** (know / don’t know).
-- Progress bar and scores: Znam, Nie znam, Seria (streak). Cards you mark “Nie znam” are re-queued so you see them again.
+- Front: effort name, 3-letter code (colour-coded by axis), and a small "cube" showing which pole of each axis is active.
+- Back: axis labels (Stanowczy/Delikatny, Nagły/Trwały, Bezpośredni/Pośredni), description, example, **play audio**, and **Znam** / **Nie znam** (know / don't know).
+- Progress bar and scores: Znam, Nie znam, Seria (streak). Cards you mark "Nie znam" are re-queued so you see them again.
 
 ### 2. **Quiz**
 
@@ -56,14 +58,14 @@ Multiple choice (A–D), correct/wrong feedback with short explanation, optional
 
 - Picks a **random effort** and a **random set of modifiers** (e.g. Tekstura, Położenie, Tempo, Głośność, Ton, Akcent, Problemy, Wiek, Płeć, Wielkość).
 - Always includes Płeć, Wiek, and Wielkość; adds a few more from the rest.
-- Builds a short **“Opis głosu”** (voice description) in prose: base effort description + persona (e.g. “Drobna kobieta młoda”) + extra traits (e.g. “Głos suchy”, “mówi powoli”, “z wyraźnym akcentem”).
-- Useful for GMs or actors who want a quick, consistent way to define a character’s voice.
+- Builds a short **"Opis głosu"** (voice description) in prose: base effort description + persona (e.g. "Drobna kobieta młoda") + extra traits (e.g. "Głos suchy", "mówi powoli", "z wyraźnym akcentem").
+- Useful for GMs or actors who want a quick, consistent way to define a character's voice.
 
 ### Other
 
 - **Axis demos**: Click the chips in the top strip (Ciężar, Czas, Przestrzeń) to hear a short audio comparing the two poles of that axis.
 - **Tutorial**: Link to a YouTube tutorial in the footer.
-- **Cheat sheet**: In “Generuj Postać”, a collapsible “Ściąga” lists all 8 efforts with name, axis words, description, and play button.
+- **Cheat sheet**: In "Generuj Postać", a collapsible "Ściąga" lists all 8 efforts with name, axis words, description, and play button.
 
 ---
 
@@ -110,3 +112,7 @@ laban-voice-efforts/
 ## License
 
 MIT. See [LICENSE](LICENSE).
+
+---
+
+<sub>Found a bug or have a suggestion? [Open an issue](https://github.com/dudematthew/laban-voice-efforts/issues)</sub>
