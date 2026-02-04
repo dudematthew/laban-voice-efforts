@@ -59,13 +59,23 @@
       <p>Trening głosu postaci</p>
     </div>
 
-    <!-- AXES LEGEND -->
+    <!-- AXES LEGEND (click to play axis demo) -->
     <div class="axes-strip">
-      <div class="axes-chip"><span class="dot" style="background:var(--ax-ciezar)"></span> Ciężar: Stanowczy / Delikatny
+      <div class="axes-chip" role="button" tabindex="0" title="Kliknij, żeby odsłuchać różnicę"
+        :class="{ 'axes-chip--playing': isPlayingAxis('ciezar') }" @click="playAxisDemo('ciezar')"
+        @keydown.enter="playAxisDemo('ciezar')">
+        <span class="dot" style="background:var(--ax-ciezar)"></span> Ciężar: Stanowczy / Delikatny
       </div>
-      <div class="axes-chip"><span class="dot" style="background:var(--ax-czas)"></span> Czas: Nagły / Trwały</div>
-      <div class="axes-chip"><span class="dot" style="background:var(--ax-prz)"></span> Przestrzeń: Bezpośredni /
-        Pośredni</div>
+      <div class="axes-chip" role="button" tabindex="0" title="Kliknij, żeby odsłuchać różnicę"
+        :class="{ 'axes-chip--playing': isPlayingAxis('czas') }" @click="playAxisDemo('czas')"
+        @keydown.enter="playAxisDemo('czas')">
+        <span class="dot" style="background:var(--ax-czas)"></span> Czas: Nagły / Trwały
+      </div>
+      <div class="axes-chip" role="button" tabindex="0" title="Kliknij, żeby odsłuchać różnicę"
+        :class="{ 'axes-chip--playing': isPlayingAxis('prz') }" @click="playAxisDemo('prz')"
+        @keydown.enter="playAxisDemo('prz')">
+        <span class="dot" style="background:var(--ax-prz)"></span> Przestrzeń: Bezpośredni / Pośredni
+      </div>
     </div>
 
     <!-- MODE TABS -->
@@ -407,7 +417,7 @@
             <span class="gm-answer-axis" style="color:var(--ax-czas);"
               x-text="gmCombo.effort.czas==='N' ? '⚡ Nagły' : '〰 Trwały'"></span>
             <span class="gm-answer-axis" style="color:var(--ax-prz);"
-              x-text="gmCombo.effort.prz==='B' ? '→ Bezpośredni' : '〰 Pośredni'"></span>
+              x-text="gmCombo.effort.prz==='B' ? '➡ Bezpośredni' : '〰 Pośredni'"></span>
           </div>
         </div>
       </div>
@@ -441,9 +451,9 @@
 
     <!-- CHEAT SHEET & TUTORIAL BUTTONS -->
     <div class="cheatsheet-row">
-      <button class="cheatsheet-btn" @click="modalOpen = true">
+      <!-- <button class="cheatsheet-btn" @click="modalOpen = true">
         📋 Ściąga
-      </button>
+      </button> -->
       <a class="cheatsheet-btn" href="https://www.youtube.com/watch?v=FVmAEezr6ao" target="_blank"
         rel="noopener noreferrer">
         🎬 Tutorial

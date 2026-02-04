@@ -245,6 +245,16 @@ nav {
 	padding: 4px 12px;
 	font-size: 0.75rem;
 	font-weight: 600;
+	cursor: pointer;
+	transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.axes-chip:hover {
+	border-color: var(--color-accent);
+}
+
+.axes-chip--playing {
+	box-shadow: 0 0 0 2px var(--color-accent);
 }
 
 .axes-chip .dot {

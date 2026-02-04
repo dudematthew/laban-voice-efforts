@@ -16,20 +16,20 @@ function labana() {
         efforts: [
             {
                 name: 'Uderzający', code: 'SNB', ciezar: 'S', czas: 'N', prz: 'B',
-                desc: 'Silny, nagły i bezpośredni. Zaangażuj mocny wydech wspierany mięśniami brzucha. Krtań krótkotrwale się zaciska. Dźwięk jest jak precyzyjne uderzenie.',
+                desc: 'Silny, nagły i bezpośredni. Mocny, eksplozywny wydech wspierany przeponą. Dźwięk jest ostry, precyzyjny i celowany - jak fizyczne uderzenie pięścią.',
                 example: 'Stanowczy rozkaz, gniewny okrzyk "Nie!", zdecydowane hasło.',
                 audio: 'audio/uderzajacy.mp3'
             },
             {
                 name: 'Trzepiący', code: 'DNP', ciezar: 'D', czas: 'N', prz: 'P',
-                desc: 'Lekki, nagły i pośredni. Dźwięk jest "rzucany" lub "strzepywany" bez ciężaru. Powietrze ulatnia się swobodnie, prawie bez oporu w krtani.',
-                example: 'Sarkastyczna uwaga rzucona w powietrze, nerwowy śmiech, lekceważący komentarz.',
+                desc: 'Lekki, nagły i pośredni. Dźwięk jest "rzucany" lub "strzepywany" bez ciężaru. Głos jest wszędzie dookoła, lekki ale bez konkretnego kierunku.',
+                example: 'Szybka, lekceważąca uwaga rzucona przez ramię, nerwowy chichot, ironiczny komentarz.',
                 audio: 'audio/trzepiacy.mp3'
             },
             {
                 name: 'Naciskający', code: 'STB', ciezar: 'S', czas: 'T', prz: 'B',
-                desc: 'Silny, ciągły i bezpośredni. Utrzymuj stały nacisk na struny głosowe i kontrolowany wydech. Dźwięk jest gęsty, intensywny i uporczywie ukierunkowany.',
-                example: 'Powolna groźba, dobitne czytanie wyroku, mówienie przez zaciśnięte zęby w gniewie.',
+                desc: 'Silny, ciągły i bezpośredni. Utrzymuj stały, kontrolowany nacisk głosowy z silnym wsparciem oddechu. Dźwięk jest gęsty, intensywny i nieprzerwanie ukierunkowany naprzód.',
+                example: 'Powolna groźba, dobitne czytanie wyroku, uporczywe argumentowanie, wolne ale stanowcze oświadczenie.',
                 audio: 'audio/naciskajacy.mp3'
             },
             {
@@ -51,15 +51,15 @@ function labana() {
                 audio: 'audio/unoszacy.mp3'
             },
             {
-                name: 'Wykręcający', code: 'SNP', ciezar: 'S', czas: 'N', prz: 'P',
-                desc: 'Silny, nagły i pośredni. Ostry, szarpiący wysiłek rozlewający się na boki. Intensywny, ale pozbawiony precyzyjnego skupienia.',
-                example: 'Szyderczy śmiech, histeryczny krzyk, nagły wybuch frustracji.',
+                name: 'Wykręcający', code: 'STP', ciezar: 'S', czas: 'T', prz: 'P',
+                desc: 'Silny, ciągły i pośredni. Napięty, skręcający wysiłek z wewnętrznym oporem. Dźwięk jakby \'wykręcany\' pod presją, z trudem - jak mówienie przez zaciśnięte mięśnie.',
+                example: 'Głos pełen stłumionego gniewu, mówienie przez ściśnięte gardło, wypowiadanie trudnych słów przez wewnętrzny opór.',
                 audio: 'audio/wykrecajacy.mp3'
             },
             {
-                name: 'Tnący', code: 'STP', ciezar: 'S', czas: 'T', prz: 'P',
-                desc: 'Silny, ciągły i pośredni. Stałe napięcie z wewnętrznym oporem i "skręceniem". Dźwięk jest "wyżymany" z trudem, z poczuciem cierpienia.',
-                example: 'Głos tłumiący płacz, mówienie przez ból, monolog pełen wewnętrznej agonii.',
+                name: 'Tnący', code: 'SNP', ciezar: 'S', czas: 'N', prz: 'P',
+                desc: 'Silny, nagły i pośredni. Eksplozywny, szeroki wysiłek rozlewający się na wszystkie strony. Dźwięk jak szybkie, agresywne cięcie mieczem - gwałtowny, ale bez precyzyjnego celu.',
+                example: 'Sarkastyczny wybuch śmiechu, gwałtowne machnięcie ręką w złości, histeryczny atak śmiechu.',
                 audio: 'audio/tnacy.mp3'
             },
         ],
@@ -102,6 +102,8 @@ function labana() {
         currentAudio: null,
         currentAudioEffort: null,  // effort.code of the audio in currentAudio (for pause/resume)
         playingAudio: null,
+        playingAxis: null,  // 'ciezar' | 'czas' | 'prz' when playing axis demo
+        axisDemos: { ciezar: 'audio/ciezar.mp3', czas: 'audio/czas.mp3', prz: 'audio/przestrzen.mp3' },
 
         // ─── INIT ────────────────────────────────────
         init() {
@@ -518,9 +520,11 @@ function labana() {
             }
             this.currentAudioEffort = null;
             this.playingAudio = null;
+            this.playingAxis = null;
         },
 
         playAudio(effort) {
+            if (this.playingAxis) this.stopAudio();
             // Same effort: toggle pause / resume
             if (this.currentAudioEffort === effort.code) {
                 if (this.currentAudio.paused) {
@@ -564,6 +568,44 @@ function labana() {
 
         isPlaying(effortCode) {
             return this.playingAudio === effortCode;
+        },
+
+        playAxisDemo(axisKey) {
+            if (this.playingAxis === axisKey && this.currentAudio) {
+                if (this.currentAudio.paused) {
+                    this.currentAudio.play().catch(() => { });
+                    this.playingAxis = axisKey;
+                } else {
+                    this.currentAudio.pause();
+                    this.playingAxis = null;
+                }
+                return;
+            }
+            this.stopAudio();
+            const src = this.axisDemos[axisKey];
+            if (!src) return;
+            const audio = new Audio(src);
+            this.currentAudio = audio;
+            this.playingAxis = axisKey;
+
+            audio.onended = () => {
+                this.playingAxis = null;
+                this.currentAudio = null;
+            };
+            audio.onerror = () => {
+                console.warn(`Axis demo not found: ${src}`);
+                this.playingAxis = null;
+                this.currentAudio = null;
+            };
+            audio.play().catch(err => {
+                console.warn('Axis demo playback failed:', err);
+                this.playingAxis = null;
+                this.currentAudio = null;
+            });
+        },
+
+        isPlayingAxis(axisKey) {
+            return this.playingAxis === axisKey;
         }
     };
 }
