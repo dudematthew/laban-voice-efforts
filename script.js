@@ -7,6 +7,7 @@ function labana() {
         // ── modal state ──
         modalOpen: false,
         imageZoomed: false,
+        welcomeModalOpen: false,
 
         // ── quiz type ──
         quizType: 'name-to-code',
@@ -111,6 +112,21 @@ function labana() {
             this.resetFlash();
             this.nextQuiz();
             this.rollGM();
+
+            // Check if user has seen welcome modal
+            if (!localStorage.getItem('labana-welcome-seen')) {
+                this.welcomeModalOpen = true;
+                localStorage.setItem('labana-welcome-seen', 'true');
+            }
+
+            // Block scroll when any modal is open
+            this.$watch('welcomeModalOpen', (isOpen) => {
+                if (isOpen) {
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    document.body.style.overflow = '';
+                }
+            });
 
             // Initialization of custom zoom
             this.$watch('modalOpen', (isOpen) => {

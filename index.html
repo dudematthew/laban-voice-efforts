@@ -451,9 +451,9 @@
 
     <!-- CHEAT SHEET & TUTORIAL BUTTONS -->
     <div class="cheatsheet-row">
-      <!-- <button class="cheatsheet-btn" @click="modalOpen = true">
-        📋 Ściąga
-      </button> -->
+      <button class="cheatsheet-btn" @click="welcomeModalOpen = true">
+        ❓ Pomoc
+      </button>
       <a class="cheatsheet-btn" href="https://www.youtube.com/watch?v=FVmAEezr6ao" target="_blank"
         rel="noopener noreferrer">
         🎬 Tutorial
@@ -485,6 +485,108 @@
 
         <div class="modal-footer">
           <button @click="modalOpen = false">Zamknij</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- WELCOME MODAL -->
+    <div x-show="welcomeModalOpen" class="modal-overlay" @click.self="welcomeModalOpen = false">
+      <div class="modal-container">
+        <div class="modal-header">
+          <h3 class="modal-title">Wysiłki Labana dla głosu</h3>
+          <button class="modal-close" @click="welcomeModalOpen = false">×</button>
+        </div>
+
+        <div class="modal-content">
+          <p style="margin-bottom: 1rem;">
+            To narzędzie pomoże Ci nauczyć się <strong>8 Wysiłków Labana</strong> w kontekście głosu –
+            techniki stosowanej w aktorstwie głosowym do precyzyjnego kształtowania charakterystyki postaci.
+          </p>
+
+          <p style="margin-bottom: 1rem;">
+            Każdy wysiłek ma trzy charakterystyki ustawione na różnych osiach:
+          </p>
+
+          <div
+            style="background: var(--color-card-hi); border-radius: var(--radius-sm); padding: 12px; margin-bottom: 1rem;">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+              <span class="dot" style="background:var(--ax-ciezar)"></span>
+              <strong>Ciężar:</strong> Stanowczy / Delikatny
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+              <span class="dot" style="background:var(--ax-czas)"></span>
+              <strong>Czas:</strong> Nagły / Trwały
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span class="dot" style="background:var(--ax-prz)"></span>
+              <strong>Przestrzeń:</strong> Bezpośredni / Pośredni
+            </div>
+          </div>
+
+          <p style="margin-bottom: 1rem; font-size: 0.9rem; color: var(--color-text);">
+            <strong>Kombinacje</strong> tych trzech osi tworzą 8 unikalnych wysiłków (np. Stanowczy + Nagły +
+            Bezpośredni = <strong>Uderzający</strong>).
+            Każda kombinacja ma charakterystyczny kod trzyliterowy (SNB, DTB, itd.) i unikalną nazwę.
+          </p>
+
+          <p style="margin-bottom: 1rem;">
+            Dzięki tej technice możesz:
+          </p>
+
+          <ul style="margin-left: 1.5rem; margin-bottom: 1.5rem;">
+            <li>Wyjść poza swoją paletę głosu i rozszerzyć jego kontrolę</li>
+            <li>Łatwiej zapamiętać charakterystykę danej postaci (wysiłek + modyfikatory)</li>
+            <li>Szybciej wymyślać unikalne głosy</li>
+          </ul>
+
+          <div
+            style="background: var(--color-card-hi); border-radius: var(--radius-sm); padding: 12px; margin-bottom: 1rem; border-left: 3px solid var(--color-accent);">
+            <div style="font-weight: 600; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
+              <span>🎙️</span> Nagrania głosowe
+            </div>
+            <p style="font-size: 0.85rem; color: var(--color-muted); margin: 0;">
+              Każdy wysiłek ma nagranie głosowe demonstrujące daną technikę.
+              Kliknij <strong>▶ Odsłuchaj</strong> przy wysiłkach lub użyj kolorowych chipów na górze strony,
+              aby usłyszeć różnicę między osiami.
+            </p>
+          </div>
+
+          <div
+            style="background: var(--color-card-hi); border-radius: var(--radius-sm); padding: 12px; margin-bottom: 1rem; border-left: 3px solid var(--color-blue);">
+            <div style="font-weight: 600; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
+              <span>🎬</span> Tutorial wideo
+            </div>
+            <p style="font-size: 0.85rem; color: var(--color-muted); margin-bottom: 8px;">
+              Oryginalny angielski tutorial Darrena Mcstay'a wyjaśnia teorię Labana i pokazuje praktyczne
+              zastosowanie wysiłków w aktorstwie głosowym.
+            </p>
+            <a href="https://www.youtube.com/watch?v=FVmAEezr6ao" target="_blank" rel="noopener noreferrer"
+              style="display: inline-flex; align-items: center; gap: 6px; color: var(--color-blue); text-decoration: none; font-size: 0.85rem; font-weight: 600;">
+              Obejrzyj tutorial →
+            </a>
+          </div>
+
+          <p style="font-size: 0.85rem; color: var(--color-muted);">
+            To jedyne polskie narzędzie do nauki Wysiłków Labana z nagraniami głosowymi.
+            Materiały zostały przetłumaczone i zebrane z różnych źródeł specjalnie dla polskich aktorów głosowych i
+            Mistrzów Gry.
+          </p>
+
+          <p style="font-size: 0.9rem;">
+            Wybierz tryb <strong>📚 Nauka</strong> aby poznać wysiłki, <strong>🎯 Quiz</strong>
+            aby sprawdzić swoją wiedzę, lub <strong>🎭 Generuj Postać</strong> aby wylosować
+            gotową kombinację do praktyki.
+          </p>
+
+          <p
+            style="font-size: 0.8rem; color: var(--color-muted); text-align: center; padding-top: 0.5rem; border-top: 1px solid var(--color-border); margin: 0;">
+            Stworzone przez <a href="https://github.com/dudematthew" target="_blank" rel="noopener noreferrer"
+              style="color: var(--color-accent); text-decoration: none; font-weight: 600;">@dudematthew</a>
+          </p>
+        </div>
+
+        <div class="modal-footer">
+          <button @click="welcomeModalOpen = false" style="width: 100%;">Zamknij</button>
         </div>
       </div>
     </div>

@@ -246,7 +246,9 @@ nav {
 	font-size: 0.75rem;
 	font-weight: 600;
 	cursor: pointer;
-	transition: border-color 0.2s, box-shadow 0.2s;
+	transition:
+		border-color 0.2s,
+		box-shadow 0.2s;
 }
 
 .axes-chip:hover {
@@ -938,6 +940,7 @@ nav {
 	justify-content: center;
 	z-index: 9999;
 	animation: fadeIn 0.2s ease-out;
+	padding: 16px;
 }
 
 .modal-container {
@@ -947,10 +950,12 @@ nav {
 	box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
 	max-width: 90vw;
 	max-height: 90vh;
-	width: 500px;
+	width: 600px;
 	overflow: hidden;
 	animation: slideUp 0.3s ease-out;
 	position: relative;
+	display: flex;
+	flex-direction: column;
 }
 
 .modal-header {
@@ -960,6 +965,7 @@ nav {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+	flex-shrink: 0;
 }
 
 .modal-title {
@@ -984,6 +990,7 @@ nav {
 	border-radius: 50%;
 	transition: all 0.2s;
 	line-height: 1;
+	flex-shrink: 0;
 }
 
 .modal-close:hover {
@@ -994,7 +1001,8 @@ nav {
 .modal-content {
 	padding: 1.5rem;
 	overflow-y: auto;
-	max-height: 70vh;
+	flex: 1;
+	min-height: 0;
 }
 
 .modal-footer {
@@ -1002,6 +1010,12 @@ nav {
 	border-top: 1px solid var(--color-border);
 	background: var(--color-card-hi);
 	text-align: center;
+	flex-shrink: 0;
+}
+
+.modal-footer button {
+	margin: 0;
+	min-height: 44px;
 }
 
 .modal-image-container {
@@ -1020,21 +1034,33 @@ nav {
 
 .modal-image-zoomed {
 	max-height: 85vh;
-	/* Ogranicza wysokość */
 	max-width: 90vw;
-	/* Ogranicza szerokość */
 	width: auto;
-	/* Zachowuje proporcje */
 	cursor: zoom-out;
-	/* Zmienia kursor */
 	object-fit: contain;
-	/* Zapewnia, że cały obraz będzie widoczny */
 }
 
 .modal-image-hint {
 	font-size: 0.8rem;
 	color: var(--color-muted);
 	margin-top: 0.5rem;
+}
+
+/* Responsiveness for smaller screens */
+@media (max-width: 640px) {
+	.modal-container {
+		width: 95vw;
+		max-height: 95vh;
+	}
+
+	.modal-content {
+		padding: 1rem;
+	}
+
+	.modal-header,
+	.modal-footer {
+		padding: 1rem;
+	}
 }
 
 @keyframes fadeIn {
