@@ -86,6 +86,7 @@ function labana() {
         flashScore: { know: 0, dontknow: 0, streak: 0, bestStreak: 0 },
 
         // ── quiz state ──
+        quizQueue: [],
         quizQ: {},
         quizOptions: [],
         quizAnswered: false,
@@ -339,6 +340,17 @@ function labana() {
             this.quizPicked = -1;
             this.quizCorrect = false;
 
+            // Initialize or refill queue when empty
+            if (this.quizQueue.length === 0) {
+                this.quizQueue = this.shuffle([...this.efforts]);
+
+                // Avoid same question twice in a row across rounds
+                if (this.quizQ && this.quizQueue[0].code === this.quizQ.code && this.quizQueue.length > 1) {
+                    // Swap first with second
+                    [this.quizQueue[0], this.quizQueue[1]] = [this.quizQueue[1], this.quizQueue[0]];
+                }
+            }
+
             // Update label based on quiz type
             switch (this.quizType) {
                 case 'name-to-code': this.quizTypeLabel = 'Wybierz kombinację (kod) tego wysiłku'; break;
@@ -347,8 +359,8 @@ function labana() {
                 case 'desc-to-name': this.quizTypeLabel = 'Wybierz nazwę tego opisu'; break;
             }
 
-            // pick a random correct effort
-            this.quizQ = this.pick(this.efforts);
+            // Pick from queue
+            this.quizQ = this.quizQueue.shift();
 
             // build options based on quiz type
             const wrong = this.efforts.filter(e => e.code !== this.quizQ.code);
