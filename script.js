@@ -111,7 +111,7 @@ function labana() {
             this.nextQuiz();
             this.rollGM();
 
-            // Inicjalizacja własnego zoomu
+            // Initialization of custom zoom
             this.$watch('modalOpen', (isOpen) => {
                 if (isOpen) {
                     this.$nextTick(() => {
@@ -134,7 +134,7 @@ function labana() {
             let isDragging = false;
             let startX, startY;
 
-            // Zapisz oryginalne źródło
+            // Save the original source
             const originalSrc = img.src;
 
             img.style.cursor = 'zoom-in';
@@ -144,13 +144,13 @@ function labana() {
                 e.stopPropagation();
 
                 if (!isZoomed) {
-                    // Włącz zoom
+                    // Turn on zoom
                     isZoomed = true;
                     img.style.cursor = 'grab';
                     img.style.transform = `scale(${scale}) translate(${posX}px, ${posY}px)`;
                     img.style.transformOrigin = 'center center';
 
-                    // Dodaj overlay, żeby można było przeciągać poza obrazek
+                    // Add overlay so it can be dragged out of the picture
                     const overlay = document.createElement('div');
                     overlay.style.position = 'fixed';
                     overlay.style.top = '0';
@@ -162,14 +162,14 @@ function labana() {
                     overlay.id = 'zoom-overlay';
                     document.body.appendChild(overlay);
 
-                    // Funkcja do zamykania zoomu po kliknięciu w overlay
+                    // Close zoom after clicking the overlay
                     overlay.onclick = (e) => {
                         if (e.target === overlay) {
                             closeZoom();
                         }
                     };
 
-                    // Funkcje przeciągania
+                    // Dragging functions
                     const startDrag = (e) => {
                         isDragging = true;
                         img.style.cursor = 'grabbing';
@@ -203,19 +203,19 @@ function labana() {
                         img.style.transition = 'transform 0.3s ease';
                     };
 
-                    // Dodaj event listeners dla myszy
+                    // Add event listener for mouse 
                     img.addEventListener('mousedown', startDrag);
                     overlay.addEventListener('mousedown', startDrag);
                     document.addEventListener('mousemove', doDrag);
                     document.addEventListener('mouseup', stopDrag);
 
-                    // Dodaj event listeners dla touch
+                    // Add event listener for touch
                     img.addEventListener('touchstart', startDrag);
                     overlay.addEventListener('touchstart', startDrag);
                     document.addEventListener('touchmove', doDrag);
                     document.addEventListener('touchend', stopDrag);
 
-                    // Dodaj klawisz ESC
+                    // Add ESC key
                     const keyHandler = (e) => {
                         if (e.key === 'Escape') {
                             closeZoom();
@@ -223,7 +223,7 @@ function labana() {
                     };
                     document.addEventListener('keydown', keyHandler);
 
-                    // Zapisz funkcje do późniejszego usunięcia
+                    // Save the function for later removall
                     img._zoomHandlers = { startDrag, doDrag, stopDrag, keyHandler, closeZoom };
                 } else {
                     closeZoom();
@@ -238,11 +238,11 @@ function labana() {
                     posX = 0;
                     posY = 0;
 
-                    // Usuń overlay
+                    // Remove overlay
                     const overlay = document.getElementById('zoom-overlay');
                     if (overlay) overlay.remove();
 
-                    // Usuń event listeners
+                    // Remove event listeners
                     if (img._zoomHandlers) {
                         img.removeEventListener('mousedown', img._zoomHandlers.startDrag);
                         document.removeEventListener('mousemove', img._zoomHandlers.doDrag);
@@ -262,15 +262,15 @@ function labana() {
             const img = document.getElementById('cheatsheet-img');
             if (!img) return;
 
-            // Resetuj styl
+            // Reset the style
             img.style.transform = 'scale(1)';
             img.style.cursor = 'zoom-in';
 
-            // Usuń overlay jeśli istnieje
+            // Remove the overlay if exists
             const overlay = document.getElementById('zoom-overlay');
             if (overlay) overlay.remove();
 
-            // Usuń event listeners
+            // Remove event listeners
             if (img._zoomHandlers) {
                 img.removeEventListener('mousedown', img._zoomHandlers.startDrag);
                 document.removeEventListener('mousemove', img._zoomHandlers.doDrag);
